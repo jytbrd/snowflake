@@ -1,11 +1,26 @@
+# Snowpark
+from snowflake.snowpark.session import Session
+from snowflake.snowpark.functions import avg, sum, col,lit
 import streamlit as st
+import pandas as pd
 
-# Initialize connection.
-conn = st.connection("snowpark")
+def create_session_object():
+    connection_parameters = st.secrets["snowflake"]
+    session = Session.builder.configs(connection_parameters).create()
+    return session
 
-# Perform query.
-df = conn.query("SELECT * from JAMF_DEVICE_INFO.PUBLIC.WATCHTOWER_STATIONS_TBL;", ttl=600)
+  
+# Create Snowpark DataFrames that loads data from Knoema: Environmental Data Atlas
+def load_data(session):
+    snow_df_co2 = session.table("SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY")\
+                         .select(col("WAREHOUSE_NAME"),col("CREDITS_USED")).collect()
+    
+    # Convert Snowpark DataFrames to Pandas DataFrames for Streamlit
+    pd_df_co2  = pd.DataFrame(snow_df_co2)
+    
+    st.write(pd_df_co2)
+    
 
-# Print results.
-for row in df.itertuples():
-    st.write(f"{row.ORGANIZATIONUNITNAME} has a :{row.LAST_UPDATED}:")
+if __name__ == "__main__":
+    session = create_session_object()
+    load_data(session)
