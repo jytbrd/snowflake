@@ -1,10 +1,10 @@
 import streamlit as st
 
 # Initialize connection.
-conn = st.connection("snowflake")
+conn = st.connection("snowpark")
 
 # Perform query.
-df = conn.query("SELECT * from WATCHTOWER_STATIONS_TBL;", ttl=600)
+df = conn.query("SELECT * from JAMF_DEVICE_INFO.PUBLIC.WATCHTOWER_STATIONS_TBL;", ttl=600)
 
 # Print results.
 for row in df.itertuples():
