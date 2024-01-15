@@ -1,4 +1,4 @@
 streamlit
-pandas
+toml
 numpy
-snowflake-snowpark-python
+snowflake-snowpark-python[pandas]
