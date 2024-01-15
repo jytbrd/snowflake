@@ -2,7 +2,7 @@ import streamlit as st
 
 # Initialize connection.
 
-conn = st.connection(**st.secrets["snowflake"])
+conn = st.connection(**st.secrets["connections.snowflake"])
 
 # Perform query.
 df = conn.query("SELECT * from WATCHTOWER_STATIONS_TBL;", ttl=600)
